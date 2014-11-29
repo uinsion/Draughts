@@ -5,6 +5,7 @@ import javafx.scene.shape.Rectangle;
 public class DraughtsBoard extends Pane {
 	
 	private Rectangle [][] Background;
+	private DraughtsPiece[][] render;
 	private double cell_width;
 	private double cell_height;
 	
