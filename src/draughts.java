@@ -3,7 +3,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-public class Draughts extends Application{
+public class draughts extends Application{
 	// overridden init method
 	public void init() {
 		sp_mainlayout = new StackPane();
