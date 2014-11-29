@@ -6,7 +6,9 @@ import javafx.scene.input.MouseEvent;
 
 //class definition for a custom reversi control
 class DraughtsControl extends Control {
-	// constructor for the class
+	
+	DraughtsBoard db_board;
+	
 	public DraughtsControl() {
 		setSkin(new DraughtsControlSkin(this));
 		db_board = new DraughtsBoard(); 
@@ -27,8 +29,5 @@ class DraughtsControl extends Control {
 		super.resize(width, height); 
 		db_board.resize(width, height);
 	}
-	
-	// private fields of a reversi board
-	DraughtsBoard db_board;
 }
 

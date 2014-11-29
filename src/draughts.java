@@ -4,7 +4,10 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class draughts extends Application{
-	// overridden init method
+
+	private StackPane sp_mainlayout;
+	private DraughtsControl dc_draughts;
+	
 	public void init() {
 		sp_mainlayout = new StackPane();
 		dc_draughts = new DraughtsControl(); 
@@ -27,8 +30,4 @@ public class draughts extends Application{
 	public static void main(String[] args) {
 		launch(args); 
 	}
-	
-	// private fields for a stack pane and a reversi control
-	private StackPane sp_mainlayout;
-	private DraughtsControl dc_draughts;
 }
