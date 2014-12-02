@@ -43,7 +43,7 @@ class DraughtsPiece extends Group {
 				break;
 		case 1: piece.setFill(Color.RED);
 				break;
-		case 2: piece.setFill(Color.GREEN);
+		case 2: piece.setFill(Color.BLACK);
 				break;
 		}
 			

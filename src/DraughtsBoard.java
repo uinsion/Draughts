@@ -34,9 +34,9 @@ public class DraughtsBoard extends Pane {
 				Background[i][j] = new Rectangle();
 				
 				if ((i+j) % 2== 0)
-					Background[i][j].setFill(Color.BROWN);
+					Background[i][j].setFill(Color.GREEN);
 				else
-					Background[i][j].setFill(Color.BEIGE);
+					Background[i][j].setFill(Color.WHITE);
 				
 				this.getChildren().add(Background[i][j]);
 			}
@@ -54,31 +54,15 @@ public class DraughtsBoard extends Pane {
 	
 	private void resetGame(){
 		resetRender();
+		//RED
+		render[0][0].setPiece(1);render[2][0].setPiece(1);render[4][0].setPiece(1);render[6][0].setPiece(1);
+		render[1][1].setPiece(1);render[3][1].setPiece(1);render[5][1].setPiece(1);render[7][1].setPiece(1);
+		render[0][2].setPiece(1);render[2][2].setPiece(1);render[4][2].setPiece(1);render[6][2].setPiece(1);
 		
-		render[1][0].setPiece(1);
-		render[3][0].setPiece(1);
-		render[5][0].setPiece(1);
-		render[7][0].setPiece(1);
-		render[0][1].setPiece(1);
-		render[2][1].setPiece(1);
-		render[4][1].setPiece(1);
-		render[6][1].setPiece(1);
-		render[1][2].setPiece(1);
-		render[3][2].setPiece(1);
-		render[5][2].setPiece(1);
-		render[7][2].setPiece(1);
-		render[0][5].setPiece(2);
-		render[2][5].setPiece(2);
-		render[4][5].setPiece(2);
-		render[6][5].setPiece(2);
-		render[1][6].setPiece(2);
-		render[3][6].setPiece(2);
-		render[5][6].setPiece(2);
-		render[7][6].setPiece(2);
-		render[0][7].setPiece(2);
-		render[2][7].setPiece(2);
-		render[4][7].setPiece(2);
-		render[6][7].setPiece(2);
+		//BLACK
+		render[0][5].setPiece(2);render[2][5].setPiece(2);render[4][5].setPiece(2);render[6][5].setPiece(2);
+		render[1][6].setPiece(2);render[3][6].setPiece(2);render[5][6].setPiece(2);render[7][6].setPiece(2);
+		render[0][7].setPiece(2);render[2][7].setPiece(2);render[4][7].setPiece(2);render[6][7].setPiece(2);
 		
 	}
 	
