@@ -1,5 +1,6 @@
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
+import javafx.scene.effect.Bloom;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.transform.Translate;
 
@@ -38,15 +39,53 @@ class DraughtsPiece extends Group {
 	}
 	
 	public void setPiece(final int type) {
+		
 		switch (type){
 		case 0: piece.setFill(Color.TRANSPARENT);
 				break;
-		case 1: piece.setFill(Color.RED);
+		case 1: piece.setFill(Color.GREEN);
 				break;
-		case 2: piece.setFill(Color.BLACK);
+		case 2: piece.setFill(Color.DARKMAGENTA);
 				break;
 		}
 			
+	}
+	
+	public int getPiece(){
+		Color c = (Color) piece.getFill();
+		int pieceindex;
+		
+		if (c == Color.TRANSPARENT){
+			pieceindex = 0;
+		} 
+		else if (c == Color.GREEN){
+			pieceindex = 1;
+		}
+		else {
+			pieceindex = 2;
+		}
+		return pieceindex;	
+	}
+	
+	public void removePiece(){
+		
+	}
+	
+	public void Highlight(){
+		Bloom bloom = new Bloom();
+		bloom.setThreshold(0.01);
+		
+		piece.setEffect(bloom);
+	}
+	
+	//deletes the highlight
+	public void Dehighlight(){	
+		piece.setEffect(null);
+	}
+	
+	public void colour(){
+		
+		
 	}
 	
 }
