@@ -67,6 +67,10 @@ class DraughtsPiece extends Group {
 		return pieceindex;	
 	}
 	
+	public void removePiece(){
+		
+	}
+	
 	public void Highlight(){
 		Bloom bloom = new Bloom();
 		bloom.setThreshold(0.01);
@@ -78,6 +82,10 @@ class DraughtsPiece extends Group {
 	public void Dehighlight(){	
 		piece.setEffect(null);
 	}
-
+	
+	public void colour(){
+		
+		
+	}
 	
 }
