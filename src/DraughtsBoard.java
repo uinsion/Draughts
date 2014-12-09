@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -9,9 +11,12 @@ public class DraughtsBoard extends Pane {
 	private double cell_width;
 	private double cell_height;
 	public int current_player;
+	public int opposing;
 	int indexx;
 	int indexy;
 	DraughtsPiece selected_piece;
+	int selectedxi;
+	int selectedyi;
 	public boolean can_move;
 	
 	public DraughtsBoard (){
@@ -70,6 +75,7 @@ public class DraughtsBoard extends Pane {
 		render[0][7].setPiece(1);render[2][7].setPiece(1);render[4][7].setPiece(1);render[6][7].setPiece(1);
 		
 		current_player = 1;
+		opposing = 2;
 		
 	}
 	
@@ -97,6 +103,13 @@ public class DraughtsBoard extends Pane {
 			}	
 		}
 	}
+	
+	private void swapPlayers() {
+		int tempPlayer = current_player;
+		current_player = opposing;
+		opposing = tempPlayer;
+	}
+	
 	public int getpiece(double x, double y){
 		indexx = (int) (x / cell_width); 
 		indexy = (int) (y / cell_height);
@@ -115,6 +128,8 @@ public class DraughtsBoard extends Pane {
 		render[indexx][indexy].Highlight();
 		
 		selected_piece = render[indexx][indexy];
+		selectedxi = indexx;
+		selectedyi = indexy;
 		
 		can_move = true;
 	}
@@ -123,15 +138,25 @@ public class DraughtsBoard extends Pane {
 		indexx = (int) (x / cell_width); 
 		indexy = (int) (y / cell_height);
 		
+		//is it one of the fields piece can move?
 		if (current_player == 1)
-			if(render[indexx+1][indexy+1]!=selected_piece || render[indexx-1][indexy+1]!=selected_piece)
+			if(render[selectedxi+1][selectedyi-1]!=render[indexx][indexy] && render[selectedxi-1][selectedyi-1]!=render[indexx][indexy])
 				return;
 		
+		
+		if (current_player == 2)
+			if(render[selectedxi-1][selectedyi+1]!=render[indexx][indexy] && render[selectedxi+1][selectedyi+1]!=render[indexx][indexy])
+				return;
+		
+		
+		
 			render[indexx][indexy].setPiece(current_player);
-			selected_piece.Dehighlight();
 			selected_piece.setPiece(0);
+			selected_piece.Dehighlight();
+			selected_piece = null;
 			
 			can_move = false;
+			swapPlayers();
 				
 		
 	}
