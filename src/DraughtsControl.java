@@ -17,17 +17,16 @@ class DraughtsControl extends Control {
 		setOnMouseClicked(new EventHandler<MouseEvent>() { 
 			@Override
 			public void handle(MouseEvent event) {
-				int piecenumber = db_board.getpiece(event.getX(), event.getY());
-				
-				if (piecenumber == db_board.current_player){ 
-						db_board.select(event.getX(), event.getY());
-						return;
-				}
-				
-				if (db_board.can_move==true){
-					db_board.move_piece(event.getX(), event.getY());
-				}
+
+				db_board.act(event.getX(), event.getY());	
 			}
+		});
+		
+		setOnKeyPressed(new EventHandler<KeyEvent>() { 
+			@Override
+			public void handle(KeyEvent event) {
+				if(event.getCode() == KeyCode.SPACE) db_board.resetGame();
+			} 
 		});
 	}
 	

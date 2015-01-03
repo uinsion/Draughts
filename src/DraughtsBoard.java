@@ -17,7 +17,16 @@ public class DraughtsBoard extends Pane {
 	DraughtsPiece selected_piece;
 	int selectedxi;
 	int selectedyi;
+	int jumpoverxi;
+	int jumpoveryi;
 	public boolean can_move;
+	int[][] possible_moves;
+	boolean[][] must_jump;
+	boolean jump_selecter;
+	int first_x_surr;
+	int first_y_surr;
+	int second_x_surr;
+	int second_y_surr;
 	
 	public DraughtsBoard (){
 		Background = new Rectangle [8][8];
@@ -62,7 +71,7 @@ public class DraughtsBoard extends Pane {
 		}	
 	}
 	
-	private void resetGame(){
+	public void resetGame(){
 		resetRender();
 		//RED
 		render[1][0].setPiece(2);render[3][0].setPiece(2);render[5][0].setPiece(2);render[7][0].setPiece(2);
@@ -110,54 +119,143 @@ public class DraughtsBoard extends Pane {
 		opposing = tempPlayer;
 	}
 	
-	public int getpiece(double x, double y){
-		indexx = (int) (x / cell_width); 
-		indexy = (int) (y / cell_height);
+	public int getPiece(int x, int y){
 		
-		int PieceIndex = render[indexx][indexy].getPiece();
+		int PieceIndex = render[x][y].getPiece();
 		return PieceIndex;
 	}
 	
-	public void select(double x, double y){
+	public void act (double x, double y){
 		indexx = (int) (x / cell_width); 
 		indexy = (int) (y / cell_height);
 		
-		if (selected_piece!=null)
+		int piecenumber = getPiece(indexx, indexy);
+		
+		if (piecenumber == current_player){ 
+			if (jump_selecter==true){
+				if (must_jump[indexx][indexy]==false)
+					return;
+			}
+			select(indexx, indexy);
+			return;
+		}
+		
+		if (can_move == true){
+			move (indexx,indexy);
+		}
+	}
+	
+	public void select(int x, int y){
+		
+		if (selected_piece!=null){
 			selected_piece.Dehighlight();
+		}	
 		
-		render[indexx][indexy].Highlight();
+		render[x][y].Highlight();
 		
-		selected_piece = render[indexx][indexy];
-		selectedxi = indexx;
-		selectedyi = indexy;
+		selected_piece = render[x][y];
+		selectedxi = x;
+		selectedyi = y;
+		
+		check_move_possibilities(x, y);
 		
 		can_move = true;
 	}
 	
-	public void move_piece(double x, double y){
-		indexx = (int) (x / cell_width); 
-		indexy = (int) (y / cell_height);
+	public void check_move_possibilities(int x, int y){
+		possible_moves = new int[8][8];
+	
+		for (int i=-1;i<2;i=i+2){
+			if ((current_player==1 && i==-1) || (current_player==2 && i==1)){
+				for (int j=-1;j<2;j=j+2){
+					
+					first_x_surr = x+j;
+					second_x_surr = x+2*j;
+					first_y_surr = y+i;
+					second_y_surr = y+2*i;
+					
+					if (first_x_surr>=0 && first_x_surr<8 && first_y_surr>=0 && first_y_surr<8){
+					
+						if (render[first_x_surr][first_y_surr].getPiece()==0){
+							possible_moves[first_x_surr][first_y_surr]=1;
+							continue;
+						}
+					}
+					else
+						continue;
+					
+					if (second_x_surr>=0 && second_x_surr<8 && second_y_surr>=0 && second_y_surr<8){
+						if (render[first_x_surr][first_y_surr].getPiece()==opposing && render[second_x_surr][second_y_surr].getPiece()==0)
+							possible_moves[second_x_surr][second_y_surr]=2;
+					}
+				}
+			}
+		}
+	}
 		
-		//is it one of the fields piece can move?
-		if (current_player == 1)
-			if(render[selectedxi+1][selectedyi-1]!=render[indexx][indexy] && render[selectedxi-1][selectedyi-1]!=render[indexx][indexy])
-				return;
+	
+	public void has_to_jump (){
+		must_jump = new boolean[8][8];
+		jump_selecter = false;
 		
-		
-		if (current_player == 2)
-			if(render[selectedxi-1][selectedyi+1]!=render[indexx][indexy] && render[selectedxi+1][selectedyi+1]!=render[indexx][indexy])
-				return;
-		
-		
-		
-			render[indexx][indexy].setPiece(current_player);
-			selected_piece.setPiece(0);
-			selected_piece.Dehighlight();
-			selected_piece = null;
-			
-			can_move = false;
-			swapPlayers();
+		for (int i=0;i<8;i++){
+			for (int j=0;j<8;j++){
 				
+				if (render[i][j].getPiece()==current_player){
+					for (int k=-1;k<2;k=k+2){
+						if ((current_player==1 && k==-1) || (current_player==2 && k==1)){
+							for (int l=-1;l<2;l=l+2){
+								
+								first_x_surr = i+l;
+								second_x_surr = i+2*l;
+								first_y_surr = j+k;
+								second_y_surr = j+2*k;
+								
+								if ( second_x_surr>=0 && second_x_surr<8 && second_y_surr>=0 && second_y_surr<8){
+								
+									if (render[first_x_surr][first_y_surr].getPiece()==opposing && render[second_x_surr][second_y_surr].getPiece()==0){
+										must_jump[i][j]=true;
+										jump_selecter = true;									
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	
+
+	public void move (int x, int y){
+		
+		if (possible_moves[x][y]==1){
+			render[x][y].setPiece(current_player);
+			selected_piece.setPiece(0);
+		}
+		else if (possible_moves[x][y]==2)
+			jump(x, y);
+		else
+			return;
+		
+		selected_piece.Dehighlight();
+		selected_piece = null;
+		can_move = false;
+		swapPlayers();
+		has_to_jump();
+		
+	}
+	
+	public void jump (int x, int y){
+		
+		render[x][y].setPiece(current_player);
+		selected_piece.setPiece(0);
+		
+		jumpoverxi = selectedxi+((x-selectedxi)/2);
+		jumpoveryi = selectedyi+((y-selectedyi)/2);	
+		render[jumpoverxi][jumpoveryi].setPiece(0);
+		
 		
 	}
 }
