@@ -19,7 +19,8 @@ public class DraughtsBoard extends Pane {
 	int selectedyi;
 	int jumpoverxi;
 	int jumpoveryi;
-	public boolean can_move;
+	public boolean selected;
+	public boolean move_done;
 	int[][] possible_moves;
 	boolean[][] must_jump;
 	boolean jump_selecter;
@@ -131,6 +132,10 @@ public class DraughtsBoard extends Pane {
 		
 		int piecenumber = getPiece(indexx, indexy);
 		
+		if (piecenumber !=  current_player && selected == false){
+			return;
+		}
+		
 		if (piecenumber == current_player){ 
 			if (jump_selecter==true){
 				if (must_jump[indexx][indexy]==false)
@@ -140,9 +145,17 @@ public class DraughtsBoard extends Pane {
 			return;
 		}
 		
-		if (can_move == true){
+		if (piecenumber == 0 && selected == true){
 			move (indexx,indexy);
 		}
+		
+		if (move_done == true){
+			selected_piece.Dehighlight();
+			selected_piece = null;
+			selected = false;
+			swapPlayers();
+		}
+		has_to_jump();
 	}
 	
 	public void select(int x, int y){
@@ -159,7 +172,7 @@ public class DraughtsBoard extends Pane {
 		
 		check_move_possibilities(x, y);
 		
-		can_move = true;
+		selected = true;
 	}
 	
 	public void check_move_possibilities(int x, int y){
@@ -233,29 +246,29 @@ public class DraughtsBoard extends Pane {
 		if (possible_moves[x][y]==1){
 			render[x][y].setPiece(current_player);
 			selected_piece.setPiece(0);
+			move_done = true;
 		}
-		else if (possible_moves[x][y]==2)
-			jump(x, y);
+		else if (possible_moves[x][y]==2){
+			render[x][y].setPiece(current_player);
+			selected_piece.setPiece(0);
+		
+			jumpoverxi = selectedxi+((x-selectedxi)/2);
+			jumpoveryi = selectedyi+((y-selectedyi)/2);	
+			render[jumpoverxi][jumpoveryi].setPiece(0);
+			
+			check_move_possibilities(x,y);
+			for(int i = 0; i < 8; i++){
+				for(int j = 0; j < 8; j++){
+					if (possible_moves[i][j]==2){
+						move_done = false;
+						return;
+					}
+				}
+			}
+			return;
+			
+		}
 		else
 			return;
-		
-		selected_piece.Dehighlight();
-		selected_piece = null;
-		can_move = false;
-		swapPlayers();
-		has_to_jump();
-		
-	}
-	
-	public void jump (int x, int y){
-		
-		render[x][y].setPiece(current_player);
-		selected_piece.setPiece(0);
-		
-		jumpoverxi = selectedxi+((x-selectedxi)/2);
-		jumpoveryi = selectedyi+((y-selectedyi)/2);	
-		render[jumpoverxi][jumpoveryi].setPiece(0);
-		
-		
 	}
 }
